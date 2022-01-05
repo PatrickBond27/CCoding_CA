@@ -1,81 +1,43 @@
-
-
-let params = {
-	angle: 180,
-	angleMin: 0,
-    angleMax: 360,
-    angleStep: 5,
-
-	posX: 250,
-	posXMin: 0,
-    posXMax: 500,
-    posXStep: 2,
-    
-    posY: 250,
-	posYMin: 0,
-    posYMax: 500,
-    
-    shapeW: 150,
-	shapeWMin: 10,
-    shapeWMax: 290,
-
-    shapeH: 150,
-	shapeHMin: 10,
-    shapeHMax: 290,
-    
-    bgColor: [180, 255, 255],
-    fColor: [255, 0, 0],
-    fillToggle: true
-    
-}
-
-
-let myPos;
-let visible = true;
-var gui;
-
+let ball;
+let ball2;
+let angle;
+let angle2;
+let speed;
 
 function setup() {
-    angleMode(DEGREES);
-    createCanvas(500, 500);
-    background(params.bgColor);
-    
-    myPos = createVector(params.posX, params.posY);
-    // create the GUI
-	gui = createGui('My Settings');
-	gui.addObject(params);
-    gui.setPosition(650, 250);
- 
-    
+    createCanvas(800, 500);
+    background(180);
+
+    speed = 3
+    angle = 25;
+    angle2 = 47;
+
+    ball = new Ball(width/2, height/2, 0, 0, 20, 230, 90, 80);
+    ball2 = new Ball(width/2, height/2, 0, 0, 20, 80, 90, 230);
+
+    ball.vx = speed*cos(angle * PI/100);
+    ball.vy = speed*sin(angle * PI/100);
+    ball2.vx = speed*cos(angle2 * PI/100);
+    ball2.vy = speed*sin(angle2 * PI/100);
 }
 
 function draw() {
-    clear();
-    myPos = createVector(params.posX, params.posY);
-    //console.log(myPos.x, myPos.y);
+    background(180);
+    ball.drawBall();
+    ball.moveBall();
+    ball2.drawBall();
+    ball2.moveBall();
 
-    background(params.bgColor);
-    rectMode(CENTER);
-
-    if (params.fillToggle == true) {
-        fill(params.fColor);
-    } else {
-        noFill();
+    if (ball.x > width - ball.radius || ball.x < ball.radius) {
+        ball.vx = -ball.vx;
     }
-    push();
-    translate(myPos.x, myPos.y);
-    rotate(params.angle);
-        rect(0, 0,params.shapeW,params.shapeH, 25,75,25,75);
-    pop();
+    if (ball.y > height - ball.radius || ball.y < ball.radius) {
+        ball.vy = -ball.vy;
+    }
+    if (ball2.x > width - ball2.radius || ball2.x < ball2.radius) {
+        ball2.vx = -ball2.vx;
+    }
+    if (ball2.y > height - ball2.radius || ball2.y < ball2.radius) {
+        ball2.vy = -ball2.vy;
+    }
 }
-
-// check for keyboard events
-function keyPressed() {
-    switch(key) {
-      // type p to hide / show the GUI
-      case 'p':
-        visible = !visible;
-        if(visible) gui.show(); else gui.hide();
-        break;
-    }
-  }
